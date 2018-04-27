@@ -1,8 +1,7 @@
 #!/bin/bash
 
-RUN_DIR=/var/vcap/sys/run/redis
+RUN_DIR=/var/vcap/sys/run/redis # PID file goes here
 LOG_DIR=/var/vcap/sys/log/redis
-PIDFILE=${RUN_DIR}/pid
 
 case $1 in
 
@@ -10,9 +9,7 @@ case $1 in
     mkdir -p $RUN_DIR $LOG_DIR
     chown -R vcap:vcap $RUN_DIR $LOG_DIR
 
-    echo $$ > $PIDFILE
-
-    exec /var/vcap/packages/redis/bin/redis-server /var/vcap/jobs/redis/redis.conf
+    /var/vcap/packages/redis/bin/redis-server /var/vcap/jobs/redis/redis.conf
       1>> $LOG_DIR/redis.stdout.log \
       2>> $LOG_DIR/redis.stderr.log
 
@@ -20,7 +17,6 @@ case $1 in
 
   stop)
     /var/vcap/packages/redis/bin/redis-cli shutdown
-    rm -f $PIDFILE
 
     ;;
 
